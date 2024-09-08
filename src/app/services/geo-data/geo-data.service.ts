@@ -1,42 +1,46 @@
 import { HttpClient } from "@angular/common/http";
-import { computed, Injectable, Signal, signal } from "@angular/core";
-import { catchError, filter, map, Observable, tap } from "rxjs";
-import { GeoJSONFeatureCollection } from "../../models/GeoJSONFeatureCollection";
-import { GeoJSONFeature } from "../../models/GeoJSONFeature";
-import { District } from "../../types/District";
+import { Injectable } from "@angular/core";
+import { catchError, map, Observable } from "rxjs";
+import { District } from "../../models/district.type";
+import { Feature, FeatureCollection } from "geojson";
 
 @Injectable({
     providedIn: "root",
 })
 export class GeoDataService {
     private url = "assets/geojson/portugal.geojson";
-    private geoData$: Observable<GeoJSONFeature[]>;
+    private geoJson$: Observable<FeatureCollection>;
 
     constructor(private http: HttpClient) {
-        this.geoData$ = this.fetchGeoData();
+        this.geoJson$ = this.fetchGeoJson();
     }
 
     public getMunicipalities() {
-        return this.geoData$;
-    }
-
-    public getMunicipalitiesByDistrict(
-        district: District,
-    ): Observable<GeoJSONFeature[]> {
-        return this.geoData$.pipe(
-            map((municipalities) =>
-                municipalities.filter(
-                    (m) => m.properties.District === district,
-                ),
-            ),
+        return this.geoJson$.pipe(
+            map((featureCollection) => {
+                return featureCollection.features;
+            }),
         );
     }
 
-    private fetchGeoData(): Observable<GeoJSONFeature[]> {
-        return this.http.get<GeoJSONFeatureCollection>(this.url).pipe(
+    public getMunicipalitiesByDistrict(district: District): Observable<Feature[]> {
+        return this.geoJson$.pipe(
+            map((featureCollection) => {
+                return featureCollection.features;
+            }),
+            map((feature) => {
+                return feature.filter((municipality) => {
+                    return municipality.properties!["District"] === district;
+                });
+            }),
+        );
+    }
+
+    private fetchGeoJson(): Observable<FeatureCollection> {
+        return this.http.get<FeatureCollection>(this.url).pipe(
             map((response) => {
                 console.log("SUCCESS: Fetching GeoJSON.");
-                return response.features;
+                return response;
             }),
             catchError((error) => {
                 console.error("ERROR: Fetching GeoJSON.", error);
