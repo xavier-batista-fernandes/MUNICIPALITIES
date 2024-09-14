@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { catchError, map, Observable } from "rxjs";
+import { BehaviorSubject, catchError, filter, map as rxjsMap, map, Observable, tap } from "rxjs";
 import { District } from "../../models/district.type";
 import { Feature, FeatureCollection } from "geojson";
 
@@ -11,11 +11,13 @@ export class GeoDataService {
     private url = "assets/geojson/portugal.geojson";
     private geoJson$: Observable<FeatureCollection>;
 
+    private municipalities: BehaviorSubject<Map<District, string[]>> = new BehaviorSubject(new Map());
+
     constructor(private http: HttpClient) {
         this.geoJson$ = this.fetchGeoJson();
     }
 
-    public getMunicipalities() {
+    public getMunicipalityFeatures$() {
         return this.geoJson$.pipe(
             map((featureCollection) => {
                 return featureCollection.features;
@@ -23,14 +25,28 @@ export class GeoDataService {
         );
     }
 
-    public getMunicipalitiesByDistrict(district: District): Observable<Feature[]> {
+    public getDistrictsObservable(): Observable<District[]> {
+        return this.getMunicipalityFeatures$().pipe(
+            map((features: Feature[]) => {
+                const districtRepeated: District[] = features.map((f) => {
+                    return f.properties!["District"];
+                });
+
+                return [...new Set(districtRepeated)];
+            }),
+        );
+    }
+
+
+
+    public getMunicipalityFeaturesByDistrict$(district: District) {
         return this.geoJson$.pipe(
-            map((featureCollection) => {
+            map((featureCollection: FeatureCollection) => {
                 return featureCollection.features;
             }),
-            map((feature) => {
-                return feature.filter((municipality) => {
-                    return municipality.properties!["District"] === district;
+            map((features: Feature[]) => {
+                return features.filter((feature) => {
+                    return feature.properties!["District"] === district;
                 });
             }),
         );
@@ -44,7 +60,7 @@ export class GeoDataService {
             }),
             catchError((error) => {
                 console.error("ERROR: Fetching GeoJSON.", error);
-                return [];
+                throw error;
             }),
         );
     }
