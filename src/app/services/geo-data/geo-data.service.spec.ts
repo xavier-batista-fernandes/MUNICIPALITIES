@@ -1,16 +1,15 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed } from "@angular/core/testing";
+import { GeoDataService } from "./geo-data.service";
 
-import { GeoDataService } from './geo-data.service';
+describe("GeoDataService", () => {
+    let service: GeoDataService;
 
-describe('GeoDataService', () => {
-  let service: GeoDataService;
+    beforeEach(() => {
+        TestBed.configureTestingModule({});
+        service = TestBed.inject(GeoDataService);
+    });
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(GeoDataService);
-  });
-
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
+    it("should be created", () => {
+        expect(service).toBeTruthy();
+    });
 });
