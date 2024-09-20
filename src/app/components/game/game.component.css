@@ -1,0 +1,36 @@
+#screen {
+    height: 100vh;
+    background-color: rgba(151, 204, 248, 0.93);
+}
+
+#map {
+    height: 80%;
+}
+
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 10%;
+}
+
+.large-text {
+    font-weight: normal;
+    font-size: 200%;
+}
+
+button {
+    background-color: black;
+    color: white;
+    height: 3em;
+    min-width: 50px;
+    padding: 10px 60px;
+    border-radius: 1.5em;
+    border: none;
+    font-size: 1.05em;
+    letter-spacing: .05em;
+}
+
+button:hover {
+    cursor: pointer;
+}

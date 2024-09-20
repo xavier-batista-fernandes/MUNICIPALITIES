@@ -1,1 +1,5 @@
-<app-leaflet-map />
+@if (isGameRunning) {
+    <app-game (back)="onBack()"/>
+} @else {
+    <app-start-screen (start)="onStart()" />
+}

@@ -1,0 +1,57 @@
+#screen {
+    height: 100vh;
+    background-color: rgba(151, 204, 248, 0.93);
+}
+
+.flex-column {
+    display: flex;
+    gap: 45px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.flex-tiny {
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+    align-items: center;
+}
+
+h1 {
+    font-size: 300%;
+    /*font-weight: bold;*/
+    margin: 0;
+}
+
+/* TODO: can this move up to app component? */
+button {
+    background-color: black;
+    color: white;
+    height: 3em;
+    min-width: 50px;
+    padding: 10px 60px;
+    border-radius: 1.5em;
+    border: none;
+    font-size: 1.05em;
+    letter-spacing: .05em;
+}
+
+button:hover {
+    cursor: pointer;
+}
+
+p {
+    margin: 0;
+}
+
+.logo-img {
+    width: 12.5%;
+    min-width: 150px;
+    -webkit-user-drag: none;
+}
+
+.author {
+    font-size: 80%;
+    font-weight: lighter;
+}

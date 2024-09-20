@@ -1,0 +1,11 @@
+<div id="screen">
+    <div class="flex-center large-text">
+        @if (targetMunicipality) {
+            Where is {{ targetMunicipality }}?
+        }
+    </div>
+    <div id="map"></div>
+    <div class="flex-center">
+        <button (click)="back.emit()">Back</button>
+    </div>
+</div>

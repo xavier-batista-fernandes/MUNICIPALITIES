@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { BehaviorSubject, catchError, filter, map as rxjsMap, map, Observable, tap } from "rxjs";
+import { catchError, map, Observable } from "rxjs";
 import { District } from "../../models/district.type";
 import { Feature, FeatureCollection } from "geojson";
 
@@ -8,38 +8,14 @@ import { Feature, FeatureCollection } from "geojson";
     providedIn: "root",
 })
 export class GeoDataService {
-    private url = "assets/geojson/portugal.geojson";
+    private url = "assets/data/portugal.geojson";
     private geoJson$: Observable<FeatureCollection>;
-
-    private municipalities: BehaviorSubject<Map<District, string[]>> = new BehaviorSubject(new Map());
 
     constructor(private http: HttpClient) {
         this.geoJson$ = this.fetchGeoJson();
     }
 
-    public getMunicipalityFeatures$() {
-        return this.geoJson$.pipe(
-            map((featureCollection) => {
-                return featureCollection.features;
-            }),
-        );
-    }
-
-    public getDistrictsObservable(): Observable<District[]> {
-        return this.getMunicipalityFeatures$().pipe(
-            map((features: Feature[]) => {
-                const districtRepeated: District[] = features.map((f) => {
-                    return f.properties!["District"];
-                });
-
-                return [...new Set(districtRepeated)];
-            }),
-        );
-    }
-
-
-
-    public getMunicipalityFeaturesByDistrict$(district: District) {
+    public getMunicipalityFeaturesByDistrictObservable(district: District) {
         return this.geoJson$.pipe(
             map((featureCollection: FeatureCollection) => {
                 return featureCollection.features;
