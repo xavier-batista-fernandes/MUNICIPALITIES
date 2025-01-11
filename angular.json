@@ -64,7 +64,7 @@
               "base": "docs",
               "browser": ""
             },
-            "baseHref": "/MUNICIPALITIES/docs/",
+            "baseHref": "/MUNICIPALITIES/",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
